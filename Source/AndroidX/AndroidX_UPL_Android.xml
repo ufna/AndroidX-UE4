@@ -4,7 +4,6 @@
 		<log text="AndroidX Initialization"/>
 		<setBoolFromProperty result="bAndroidXEnabled" ini="Engine" section="/Script/AndroidX.AndroidXSettings" property="bAndroidXEnable" default="true"/>
 		<setBoolFromProperty result="bMultiDexEnabled" ini="Engine" section="/Script/AndroidX.AndroidXSettings" property="bMultiDexEnable" default="true"/>
-		<setBoolFromProperty result="bGooglePlayServicesEnabled" ini="Engine" section="/Script/AndroidX.AndroidXSettings" property="bGooglePlayServicesEnabled" default="false"/>
 	</init>
 
 	<gradleProperties>
@@ -54,40 +53,10 @@
 		</if>
 	</proguardAdditions>
 
-	<buildscriptGradleAdditions>
-		<if condition="bAndroidXEnabled">
-			<true>
-				<insert>
-					repositories {
-						google()
-					}
-
-					dependencies {
-						classpath 'com.google.gms:google-services:4.3.4'
-					}
-				</insert>
-			</true>
-		</if>
-	</buildscriptGradleAdditions>
-
 	<buildGradleAdditions>
 		<if condition="bAndroidXEnabled">
 			<true>
-				<if condition="bGooglePlayServicesEnabled">
-					<true>
-						<insert>
-							dependencies {
-								implementation 'com.google.android.gms:play-services-games:21.0.0'
-							}
-
-							apply plugin: 'com.google.gms.google-services'
-						</insert>
-					</true>
-				</if>
-
 				<insert>
-					apply plugin: 'com.android.application'
-
 					allprojects {
 						def classMap = [
 							'android.support.annotation': 'androidx.annotation',

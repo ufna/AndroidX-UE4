@@ -5,6 +5,5 @@
 UAndroidXSettings::UAndroidXSettings()
 	: bAndroidXEnabled(true)
 	, bMultiDexEnabled(true)
-	, bGooglePlayServicesEnabled(false)
 {
 }
