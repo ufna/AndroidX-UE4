@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+	<init>
+		<log text="AndroidX Initialization"/>
+		<setBoolFromProperty result="bAndroidXEnabled" ini="Engine" section="/Script/AndroidX.AndroidXSettings" property="bAndroidXEnable" default="true"/>
+		<setBoolFromProperty result="bMultiDexEnabled" ini="Engine" section="/Script/AndroidX.AndroidXSettings" property="bMultiDexEnable" default="true"/>
+    <setBoolFromProperty result="bGooglePlayServicesEnabled" ini="Engine" section="/Script/AndroidX.AndroidXSettings" property="bGooglePlayServicesEnabled" default="false"/>
+	</init>
+
+	<gradleProperties>
+		<if condition="bAndroidXEnabled">
+			<true>
+				<insert>
+					android.useAndroidX=true
+					android.enableJetifier=true
+				</insert>
+			</true>
+		</if>
+	</gradleProperties>
+
+	<buildGradleAdditions>
+		<if condition="bMultiDexEnabled">
+			<true>
+			<insert>
+				android {
+					defaultConfig {
+						multiDexEnabled true
+					}
+				}
+
+				dependencies {
+					implementation 'androidx.multidex:multidex:2.0.1'
+				}
+			</insert>
+		</true>
+		</if>
+	</buildGradleAdditions>
+
+	<androidManifestUpdates>
+		<if condition="bMultiDexEnabled">
+			<true>
+				<addAttribute tag="application" name="android:name" value="androidx.multidex.MultiDexApplication"/>
+			</true>
+		</if>
+	</androidManifestUpdates>
+
+	<proguardAdditions>
+		<if condition="bMultiDexEnabled">
+			<true>
+				<insert>
+					-keep class androidx.multidex.** { *; }
+				</insert>
+			</true>
+		</if>
+	</proguardAdditions>
+
+	<buildscriptGradleAdditions>
+		<if condition="bAndroidXEnabled">
+			<true>
+				<insert>
+					repositories {
+						google()
+					}
+
+					dependencies {
+						classpath 'com.google.gms:google-services:4.3.4'
+					}
+				</insert>
+			</true>
+		</if>
+	</buildscriptGradleAdditions>
+
+	<buildGradleAdditions>
+		<if condition="bAndroidXEnabled">
+			<true>
+				<insert>
+					<if condition="bAndroidXEnabled">
+						<true>
+							<insert>
+								dependencies {
+									implementation 'com.google.android.gms:play-services-games:21.0.0'
+								}
+
+								apply plugin: 'com.google.gms.google-services'
+							</insert>
+						</true>
+					</if>
+
+					apply plugin: 'com.android.application'
+
+					allprojects {
+						def classMap = [
+							'android.support.annotation': 'androidx.annotation',
+							'android.support.v4.app.ActivityCompat': 'androidx.core.app.ActivityCompat',
+							'android.support.v4.app.NotificationCompat': 'androidx.core.app.NotificationCompat',
+							'android.support.v4.app.NotificationManagerCompat': 'androidx.core.app.NotificationManagerCompat',
+							'android.support.v4.content.ContextCompat': 'androidx.core.content.ContextCompat',
+							'android.support.v4.content.FileProvider': 'androidx.core.content.FileProvider',
+							'android.support.v13.app.FragmentCompat': 'androidx.legacy.app.FragmentCompat',
+							'android.arch.lifecycle': 'androidx.lifecycle',
+							'android.arch.lifecycle.Lifecycle': 'androidx.lifecycle.Lifecycle',
+							'android.arch.lifecycle.LifecycleObserver': 'androidx.lifecycle.LifecycleObserver',
+							'android.arch.lifecycle.OnLifecycleEvent': 'androidx.lifecycle.OnLifecycleEvent',
+							'android.arch.lifecycle.ProcessLifecycleOwner': 'androidx.lifecycle.ProcessLifecycleOwner',
+						]
+
+						afterEvaluate { project ->
+							project.rootProject.projectDir.traverse(type: groovy.io.FileType.FILES, nameFilter: ~/.*\.java$/) { f ->
+								classMap.each { entry ->
+									if (f.getText('UTF-8').contains(entry.key)) {
+										println "Change ${entry.key} to ${entry.value} in file ${f}"
+										ant.replace(file: f, token: entry.key, value: entry.value)
+									}
+								}
+							}
+						}
+					}
+				</insert>
+			</true>
+		</if>
+	</buildGradleAdditions>
+
+</root>
