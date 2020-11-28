@@ -4,7 +4,7 @@
 		<log text="AndroidX Initialization"/>
 		<setBoolFromProperty result="bAndroidXEnabled" ini="Engine" section="/Script/AndroidX.AndroidXSettings" property="bAndroidXEnable" default="true"/>
 		<setBoolFromProperty result="bMultiDexEnabled" ini="Engine" section="/Script/AndroidX.AndroidXSettings" property="bMultiDexEnable" default="true"/>
-    <setBoolFromProperty result="bGooglePlayServicesEnabled" ini="Engine" section="/Script/AndroidX.AndroidXSettings" property="bGooglePlayServicesEnabled" default="false"/>
+		<setBoolFromProperty result="bGooglePlayServicesEnabled" ini="Engine" section="/Script/AndroidX.AndroidXSettings" property="bGooglePlayServicesEnabled" default="false"/>
 	</init>
 
 	<gradleProperties>
@@ -73,19 +73,19 @@
 	<buildGradleAdditions>
 		<if condition="bAndroidXEnabled">
 			<true>
+				<if condition="bGooglePlayServicesEnabled">
+					<true>
+						<insert>
+							dependencies {
+								implementation 'com.google.android.gms:play-services-games:21.0.0'
+							}
+
+							apply plugin: 'com.google.gms.google-services'
+						</insert>
+					</true>
+				</if>
+
 				<insert>
-					<if condition="bAndroidXEnabled">
-						<true>
-							<insert>
-								dependencies {
-									implementation 'com.google.android.gms:play-services-games:21.0.0'
-								}
-
-								apply plugin: 'com.google.gms.google-services'
-							</insert>
-						</true>
-					</if>
-
 					apply plugin: 'com.android.application'
 
 					allprojects {

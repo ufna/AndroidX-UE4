@@ -20,7 +20,7 @@ public:
 	UPROPERTY(Config, EditAnywhere, Category = "AndroidX", meta = (EditCondition = "bAndroidXEnabled"))
 	bool bMultiDexEnabled;
 
-	/* (optional) Try this if your project relies on Google Play Services and you got issues with duplicate classes */
-	UPROPERTY(Config, EditAnywhere, Category = "AndroidX", meta = (EditCondition = "bAndroidXEnabled"))
+	/* (experimental) Try this if your project relies on Google Play Services and you got issues with duplicate classes */
+	UPROPERTY(Config, EditAnywhere, Category = "Last Resort", meta = (EditCondition = "bAndroidXEnabled"))
 	bool bGooglePlayServicesEnabled;
 };
