@@ -21,7 +21,6 @@ public class AndroidX : ModuleRules
 			{
 				"CoreUObject",
 				"Engine",
-				"Settings"
 			}
 			);
 		
