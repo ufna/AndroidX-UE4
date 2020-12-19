@@ -5,6 +5,7 @@
 #include "AndroidXSettings.h"
 
 #include "Developer/Settings/Public/ISettingsModule.h"
+#include "Modules/ModuleManager.h"
 #include "UObject/Package.h"
 
 #define LOCTEXT_NAMESPACE "FAndroidXModule"
